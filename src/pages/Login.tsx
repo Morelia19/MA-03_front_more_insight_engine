@@ -87,7 +87,7 @@ const Login = () => {
                         <input
                             type="email"
                             id="email"
-                            className="w-full px-4 py-3.5 text-base border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 bg-gray-50 focus:border-[#8568C0] focus:bg-white focus:shadow-[0_0_0_4px_rgba(133,104,192,0.1)] placeholder:text-gray-400"
+                            className="w-full px-4 py-3.5 text-black border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 bg-gray-50 focus:border-[#8568C0] focus:bg-white focus:shadow-[0_0_0_4px_rgba(133,104,192,0.1)] placeholder:text-gray-400"
                             placeholder="tu@ejemplo.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -107,7 +107,7 @@ const Login = () => {
                         <input
                             type="password"
                             id="password"
-                            className="w-full px-4 py-3.5 text-base border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 bg-gray-50 focus:border-[#8568C0] focus:bg-white focus:shadow-[0_0_0_4px_rgba(133,104,192,0.1)] placeholder:text-gray-400"
+                            className="w-full px-4 py-3.5 text-black border-2 border-gray-200 rounded-xl outline-none transition-all duration-300 bg-gray-50 focus:border-[#8568C0] focus:bg-white focus:shadow-[0_0_0_4px_rgba(133,104,192,0.1)] placeholder:text-gray-400"
                             placeholder="Ingresa tu contraseña"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
