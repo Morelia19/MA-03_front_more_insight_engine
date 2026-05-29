@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import MoreAcademyMiniLogo from '../assets/img/more-academy-mini-logo.png'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../data/supabase'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -43,9 +43,7 @@ const Login = () => {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#667eea] to-[#764ba2] p-6">
             <div className="bg-white rounded-3xl p-12 max-w-md w-full shadow-2xl animate-[slideInUp_0.6s_ease-out]">
                 <div className="flex justify-center mb-8">
-                    <div
-                        className="w-20 h-20 rounded-full flex items-center justify-center hover:scale-105 transition-all duration-300"
-                    >
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center hover:scale-105 transition-all duration-300">
                         <img
                             src={MoreAcademyMiniLogo}
                             alt="More Academy Logo"
