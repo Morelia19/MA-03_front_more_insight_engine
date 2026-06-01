@@ -10,7 +10,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         setLoading(true)
         setError(null)
@@ -132,7 +132,7 @@ const Login = () => {
                         ¿Necesitas ayuda?{' '}
                     </span>
                     <a
-                        href="#"
+                        href="https://wa.me/51972799160"
                         className="text-[#8568C0] font-semibold no-underline transition-all duration-300 relative hover:text-[#6B4FA3] after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-[-2px] after:left-0 after:bg-[#8568C0] after:transition-all after:duration-300 hover:after:w-full"
                         style={{ fontFamily: 'Lato-Bold, sans-serif' }}
                     >

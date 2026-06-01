@@ -41,7 +41,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
     ] as const
 
     return (
-        <div className="min-h-screen flex bg-slate-50 text-slate-800 antialiased font-sans">
+        <div className="h-screen flex bg-slate-50 text-slate-800 antialiased font-sans overflow-hidden">
             <aside
                 className={`bg-[#0F0F12] text-white flex flex-col justify-between transition-all duration-300 relative border-r border-slate-900 shrink-0 ${
                     isSidebarCollapsed ? 'w-20' : 'w-64'
@@ -130,7 +130,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
                         <div className="flex items-center gap-3">
                             <div className="text-right">
-                                <div className="text-sm font-bold text-slate-800">María García</div>
+                                <div className="text-sm font-bold text-slate-800">q </div>
                                 <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Estudiante</div>
                             </div>
                             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm ring-1 ring-slate-100">

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../data/supabase'
+import { getUsers } from '../services/userService'
 import {
-    defaultUsers,
     defaultCourses,
     defaultSessions,
     defaultPayments,
@@ -31,7 +31,7 @@ const Dashboard = () => {
 
     const [users, setUsers] = useState<UserItem[]>(() => {
         const saved = localStorage.getItem('ma_admin_users')
-        return saved ? JSON.parse(saved) : defaultUsers
+        return JSON.parse(saved || '{}')
     })
 
     const [courses, setCourses] = useState<CourseItem[]>(() => {
@@ -53,6 +53,22 @@ const Dashboard = () => {
         const saved = localStorage.getItem('ma_admin_emergency_links')
         return saved ? JSON.parse(saved) : defaultEmergencyLinks
     })
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const mappedUsers = await getUsers()
+                
+                setUsers(prev => {
+                    const filteredPrev = prev.filter(p => !mappedUsers.some(m => m.email === p.email))
+                    return [...filteredPrev, ...mappedUsers]
+                })
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchUsers()
+    }, [])
 
     useEffect(() => {
         localStorage.setItem('ma_admin_users', JSON.stringify(users))

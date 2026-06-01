@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
-import { Plus, Search, ChevronLeft, ChevronRight, Video, X } from 'lucide-react'
-import { SessionItem, UserItem } from '../interface'
+import React, { useState } from 'react';
+import { Plus, Search, ChevronLeft, ChevronRight, Video, X } from 'lucide-react';
+import { SessionItem, UserItem } from '../interface';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import { addWeeks, subWeeks, addMonths, subMonths,format, parse, startOfWeek, endOfWeek, getDay } from 'date-fns';
+import { es } from 'date-fns/locale';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 interface CalendarTabProps {
     sessions: SessionItem[]
@@ -8,12 +12,25 @@ interface CalendarTabProps {
     users: UserItem[]
 }
 
+const locales = {
+    'es': es,
+}
+
+const localizer = dateFnsLocalizer({
+    format,
+    parse,
+    startOfWeek,
+    getDay,
+    locales,
+})
+
 export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions, users }) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [selectedTeacherFilter, setSelectedTeacherFilter] = useState('all')
     const [selectedStatusFilter, setSelectedStatusFilter] = useState('all')
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [viewMode, setViewMode] = useState<'Semana' | 'Mes'>('Semana')
+    const [currentDate, setCurrentDate] = useState(new Date('2026-05-28'))
 
     const [studentName, setStudentName] = useState('')
     const [teacherId, setTeacherId] = useState('')
@@ -25,18 +42,6 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
 
     const teachersList = users.filter(u => u.role === 'Profesor')
 
-    const days = [
-        { label: 'LUN', dateNum: '25', fullDate: '2026-05-25', index: 0 },
-        { label: 'MAR', dateNum: '26', fullDate: '2026-05-26', index: 1 },
-        { label: 'MIÉ', dateNum: '27', fullDate: '2026-05-27', index: 2 },
-        { label: 'JUE', dateNum: '28', fullDate: '2026-05-28', index: 3 },
-        { label: 'VIE', dateNum: '29', fullDate: '2026-05-29', index: 4 },
-        { label: 'SÁB', dateNum: '30', fullDate: '2026-05-30', index: 5 },
-        { label: 'DOM', dateNum: '31', fullDate: '2026-05-31', index: 6 }
-    ]
-
-    const hours = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00']
-
     const filteredSessions = sessions.filter(session => {
         const matchesSearch = session.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             session.teacherName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -44,6 +49,22 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
         const matchesStatus = selectedStatusFilter === 'all' || session.status === selectedStatusFilter
         return matchesSearch && matchesTeacher && matchesStatus
     })
+
+    const handlePrev = () => {
+        if (viewMode === 'Semana') {
+            setCurrentDate(prev => subWeeks(prev, 1))
+        } else {
+            setCurrentDate(prev => subMonths(prev, 1))
+        }
+    }
+
+    const handleNext = () => {
+        if (viewMode === 'Semana') {
+            setCurrentDate(prev => addWeeks(prev, 1))
+        } else {
+            setCurrentDate(prev => addMonths(prev, 1))
+        }
+    }
 
     const openCreateModal = () => {
         setStudentName('')
@@ -56,7 +77,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
         setIsModalOpen(true)
     }
 
-    const handleCreateSession = (e: React.FormEvent) => {
+    const handleCreateSession = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         const selectedDateObj = new Date(date)
         let dayIndex = selectedDateObj.getDay() - 1
@@ -80,16 +101,6 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
         setIsModalOpen(false)
     }
 
-    const getSessionForSlot = (dayIndex: number, hourStr: string) => {
-        return sessions.find(s => {
-            const sessionHour = s.startTime.split(':')[0]
-            const slotHour = hourStr.split(':')[0]
-            const isSameDay = s.dayOfWeek === dayIndex
-            const isSameHour = sessionHour === slotHour
-            return isSameDay && isSameHour
-        })
-    }
-
     const getSessionBadgeStyles = (statusVal: 'Programada' | 'Completada' | 'Cancelada') => {
         if (statusVal === 'Cancelada') {
             return 'bg-red-50 text-red-600'
@@ -99,6 +110,30 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
         }
         return 'bg-purple-50 text-[#8568C0]'
     }
+
+    const events = filteredSessions.map(session => {
+        const start = new Date(`${session.date}T${session.startTime}:00`)
+        const end = new Date(`${session.date}T${session.endTime}:00`)
+
+        return {
+            id: session.id,
+            title: `${session.studentName}(${session.teacherName})`,
+            start,
+            end,
+            resource: session
+        }
+    })
+
+    const getHeaderTitle = () => {
+        if (viewMode === 'Semana') {
+        const start = startOfWeek(currentDate, { weekStartsOn: 1 })
+        const end = endOfWeek(currentDate, { weekStartsOn: 1 })
+        return `${format(start, 'dd', {
+            locale: es })} - ${format(end, "dd 'de' MMMM yyyy", { locale: es })}`;
+        } else {
+            return format(currentDate, "MMMM 'de' yyyy", { locale: es });
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -110,6 +145,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
                 <div className="flex items-center gap-2">
                     <button 
                         type="button"
+                        onClick={() => setCurrentDate(new Date())}
                         className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-bold text-slate-700 transition-all"
                     >
                         Hoy
@@ -117,18 +153,20 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
                     <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden">
                         <button 
                             type="button"
+                            onClick={handlePrev}
                             className="p-2 hover:bg-slate-50 border-r border-slate-200 text-slate-500 transition-all"
                         >
                             <ChevronLeft size={16} />
                         </button>
                         <button 
                             type="button"
+                            onClick={handleNext}
                             className="p-2 hover:bg-slate-50 text-slate-500 transition-all"
                         >
                             <ChevronRight size={16} />
                         </button>
                     </div>
-                    <span className="text-sm font-bold text-slate-800 ml-2">25 – 31 May 2026</span>
+                    <span className="text-sm font-bold text-slate-800 ml-2">{getHeaderTitle()}</span>
                 </div>
 
                 <div className="flex bg-slate-100 p-1 rounded-xl">
@@ -154,52 +192,31 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-                <div className="lg:col-span-3 bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] overflow-x-auto">
-                    <div className="min-w-[600px]">
-                        <div className="grid grid-cols-8 border-b border-slate-100 pb-4 text-center font-bold text-xs text-slate-500">
-                            <div className="text-left pl-2">Hora</div>
-                            {days.map((day) => {
-                                const isToday = day.dateNum === '28'
-                                return (
-                                    <div key={day.label} className="flex flex-col items-center">
-                                        <span className="text-[10px] tracking-wider text-slate-400 font-bold uppercase">{day.label}</span>
-                                        <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm mt-1 transition-all ${
-                                            isToday ? 'bg-[#8568C0] text-white font-bold shadow-md shadow-[#8568c0]/20' : 'text-slate-700'
-                                        }`}>
-                                            {day.dateNum}
-                                        </span>
-                                    </div>
-                                )
-                            })}
-                        </div>
+                <div style={{height: '600px '}} className='lg:col-span-3 bg-white border border-slate-100 rounded-3xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] w-full'>
+                    <Calendar
+                        date={currentDate}
+                        view={viewMode === 'Semana' ? 'week' : 'month'}
+                        onNavigate={(newDate) => setCurrentDate(newDate)}
+                        onView={(view) => setViewMode(view === 'month' ? 'Mes' : 'Semana')}
+                        localizer={localizer}
+                        events={events}
+                        startAccessor="start"
+                        endAccessor="end"
+                        culture='es'
+                        defaultView='week'
+                        style={{ height: '100%' }}
+                        toolbar={false}
+                        messages={{
+                            next: "Sig.",
+                            previous: "Ant.",
+                            today: "Hoy",
+                            month: "Mes",
+                            week: "Semana",
+                            day: "Día",
+                        }}
 
-                        <div className="divide-y divide-slate-100">
-                            {hours.map((hour) => (
-                                <div key={hour} className="grid grid-cols-8 min-h-[64px] items-center text-xs">
-                                    <div className="font-bold text-slate-400 pl-2 py-4">{hour}</div>
-                                    {days.map((day) => {
-                                        const session = getSessionForSlot(day.index, hour)
-                                        return (
-                                            <div key={day.index} className="border-l border-slate-100 h-full p-1.5 flex flex-col justify-center relative">
-                                                {session && (
-                                                    <div className={`p-2 rounded-2xl h-full flex flex-col justify-center shadow-xs border leading-tight ${
-                                                        session.status === 'Cancelada'
-                                                            ? 'bg-red-50/70 border-red-100 text-red-700'
-                                                            : 'bg-purple-50/70 border-purple-100 text-purple-700'
-                                                    }`}>
-                                                        <span className="font-bold truncate">{session.studentName}</span>
-                                                        <span className="text-[10px] opacity-75 truncate">{session.startTime}-{session.endTime}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    />
                 </div>
-
                 <div className="space-y-6">
                     <button
                         type="button"

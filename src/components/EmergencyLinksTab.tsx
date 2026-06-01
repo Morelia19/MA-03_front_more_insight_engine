@@ -30,7 +30,7 @@ export const EmergencyLinksTab: React.FC<EmergencyLinksTabProps> = ({
         setIsModalOpen(true)
     }
 
-    const handleGenerate = (e: React.FormEvent) => {
+    const handleGenerate = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         const newLink: EmergencyLinkItem = {

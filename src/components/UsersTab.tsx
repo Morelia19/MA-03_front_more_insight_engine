@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Search, Plus, Mail, MoreVertical, GraduationCap, Users, Shield, Trash2, Edit2, X } from 'lucide-react'
 import { UserItem } from '../interface'
+import { createUser, updateUser } from '../services/userService'
 
 interface UsersTabProps {
     users: UserItem[]
@@ -65,20 +66,32 @@ export const UsersTab: React.FC<UsersTabProps> = ({ users, setUsers }) => {
         setMenuOpenId(null)
     }
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (editingUser) {
-            setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, name, email, role, detail, status } : u))
-        } else {
-            const newUser: UserItem = {
-                id: Math.random().toString(36).substring(2, 11),
-                name,
-                email,
-                role,
-                detail,
-                status
+
+        try {
+            if (editingUser) {
+                await updateUser(editingUser.id, name)
+                setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, name, email, role, detail, status } : u))
+            } else {
+                const newUser = await createUser(name, email, role)
+                setUsers(prev => [...prev, newUser])
             }
-            setUsers(prev => [...prev, newUser])
+        } catch (err) {
+            console.error(err)
+            if (editingUser) {
+                setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, name, email, role, detail, status } : u))
+            } else {
+                const newUser: UserItem = {
+                    id: Math.random().toString(36).substring(2, 11),
+                    name,
+                    email,
+                    role,
+                    detail,
+                    status
+                }
+                setUsers(prev => [...prev, newUser])
+            }
         }
         setIsModalOpen(false)
     }

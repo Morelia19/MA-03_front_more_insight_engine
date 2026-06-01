@@ -1,15 +1,4 @@
-import { UserItem, CourseItem, SessionItem, TeacherPaymentItem, EmergencyLinkItem } from '../interface'
-
-export const defaultUsers: UserItem[] = [
-    { id: 'student-1', name: 'María García', email: 'maria@more.edu', role: 'Estudiante', detail: 'More English • Dr. Carlos Mendoza', status: 'Activo' },
-    { id: 'student-2', name: 'Juan Pérez', email: 'juan@more.edu', role: 'Estudiante', detail: 'More Maths • Ing. Ana Torres', status: 'Activo' },
-    { id: 'student-3', name: 'Ana López', email: 'ana.lopez@more.edu', role: 'Estudiante', detail: 'More Code • Lic. Roberto Díaz', status: 'Activo' },
-    { id: 'student-4', name: 'Carlos Ruiz', email: 'carlos.ruiz@more.edu', role: 'Estudiante', detail: 'More English • Dr. Carlos Mendoza', status: 'Inactivo' },
-    { id: 'teacher-1', name: 'Dr. Carlos Mendoza', email: 'carlos.mendoza@more.edu', role: 'Profesor', detail: '12 clases', status: 'Activo' },
-    { id: 'teacher-2', name: 'Ing. Ana Torres', email: 'ana.torres@more.edu', role: 'Profesor', detail: '8 clases', status: 'Activo' },
-    { id: 'teacher-3', name: 'Lic. Roberto Díaz', email: 'roberto.diaz@more.edu', role: 'Profesor', detail: '15 clases', status: 'Activo' },
-    { id: 'admin-1', name: 'Laura Vargas', email: 'laura@more.edu', role: 'Administrador', detail: 'Admin Principal', status: 'Activo' }
-]
+import { CourseItem, SessionItem, TeacherPaymentItem, EmergencyLinkItem } from '../interface'
 
 export const defaultCourses: CourseItem[] = [
     { id: 'course-1', title: 'More English - Básico', code: 'ENG-001', type: 'Grupal', teacherId: 'teacher-1', teacherName: 'Dr. Carlos Mendoza', schedule: 'Lunes y Miércoles 10:00 AM', startDate: '2025-01-15', studentsCount: 4, maxStudents: 6 },

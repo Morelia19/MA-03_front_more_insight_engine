@@ -62,7 +62,7 @@ export const CoursesTab: React.FC<CoursesTabProps> = ({ courses, setCourses, use
         setMenuOpenId(null)
     }
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         const selectedTeacher = teachersList.find(t => t.id === teacherId)
         const selectedTeacherName = selectedTeacher ? selectedTeacher.name : 'Sin Profesor'
