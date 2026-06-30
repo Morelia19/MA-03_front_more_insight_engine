@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Link2, AlertTriangle, Copy, Check, Plus, X } from 'lucide-react'
-import { EmergencyLinkItem, UserItem } from '../interface'
+import { EmergencyLinkInterface, UserInterface } from '../interface'
 
 interface EmergencyLinksTabProps {
-    emergencyLinks: EmergencyLinkItem[]
-    setEmergencyLinks: React.Dispatch<React.SetStateAction<EmergencyLinkItem[]>>
-    users: UserItem[]
+    emergencyLinks: EmergencyLinkInterface[]
+    setEmergencyLinks: React.Dispatch<React.SetStateAction<EmergencyLinkInterface[]>>
+    users: UserInterface[]
 }
 
 export const EmergencyLinksTab: React.FC<EmergencyLinksTabProps> = ({
@@ -33,7 +33,7 @@ export const EmergencyLinksTab: React.FC<EmergencyLinksTabProps> = ({
     const handleGenerate = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const newLink: EmergencyLinkItem = {
+        const newLink: EmergencyLinkInterface = {
             id: Math.random().toString(36).substring(2, 11),
             teacherName,
             studentName,

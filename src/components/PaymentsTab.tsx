@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Wallet, CheckCircle, ChevronDown, ChevronUp, CreditCard } from 'lucide-react'
-import { TeacherPaymentItem, StudentPaymentDetail } from '../interface'
+import { TeacherPaymentInterface, StudentPaymentDetail } from '../interface'
 
 interface PaymentsTabProps {
-    payments: TeacherPaymentItem[]
-    setPayments: React.Dispatch<React.SetStateAction<TeacherPaymentItem[]>>
+    payments: TeacherPaymentInterface[]
+    setPayments: React.Dispatch<React.SetStateAction<TeacherPaymentInterface[]>>
 }
 
 export const PaymentsTab: React.FC<PaymentsTabProps> = ({ payments, setPayments }) => {
@@ -30,7 +30,7 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ payments, setPayments 
             completedClasses: sd.totalClasses
         })
 
-        const updateTeacherPayment = (p: TeacherPaymentItem) => {
+        const updateTeacherPayment = (p: TeacherPaymentInterface) => {
             if (p.id !== teacherId) {
                 return p
             }
@@ -153,7 +153,7 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ payments, setPayments 
                                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Detalle por alumno</h4>
 
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        {payment.studentDetails.map((detail) => {
+                                        {payment.studentDetails.map((detail:any) => {
                                             const pendingCount = detail.totalClasses - detail.completedClasses
                                             const subtotal = detail.completedClasses * detail.ratePerClass
 

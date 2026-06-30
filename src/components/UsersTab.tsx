@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { Search, Plus, Mail, MoreVertical, GraduationCap, Users, Shield, Trash2, Edit2, X } from 'lucide-react'
-import { UserItem } from '../interface'
+import { UserInterface } from '../interface'
 import { createUser, updateUser } from '../services/userService'
 
 interface UsersTabProps {
-    users: UserItem[]
-    setUsers: React.Dispatch<React.SetStateAction<UserItem[]>>
+    users: UserInterface[]
+    setUsers: React.Dispatch<React.SetStateAction<UserInterface[]>>
 }
 
 export const UsersTab: React.FC<UsersTabProps> = ({ users, setUsers }) => {
     const [activeTab, setActiveTab] = useState<'Estudiante' | 'Profesor' | 'Administrador'>('Estudiante')
     const [searchQuery, setSearchQuery] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [editingUser, setEditingUser] = useState<UserItem | null>(null)
+    const [editingUser, setEditingUser] = useState<UserInterface | null>(null)
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
 
     const [name, setName] = useState('')
@@ -55,7 +55,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ users, setUsers }) => {
         setIsModalOpen(true)
     }
 
-    const openEditModal = (user: UserItem) => {
+    const openEditModal = (user: UserInterface) => {
         setEditingUser(user)
         setName(user.name)
         setEmail(user.email)
@@ -82,7 +82,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ users, setUsers }) => {
             if (editingUser) {
                 setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, name, email, role, detail, status } : u))
             } else {
-                const newUser: UserItem = {
+                const newUser: UserInterface = {
                     id: Math.random().toString(36).substring(2, 11),
                     name,
                     email,

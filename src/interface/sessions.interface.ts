@@ -1,4 +1,4 @@
-export interface SessionItem {
+export interface SessionInterface {
     id: string;
     studentName: string;
     teacherName: string;

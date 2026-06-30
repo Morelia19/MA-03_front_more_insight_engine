@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 import { Search, Plus, Book, User, Calendar, Users, MoreVertical, Edit2, Trash2, X } from 'lucide-react'
-import { CourseItem, UserItem } from '../interface'
+import { CourseInterface, UserInterface } from '../interface'
 
 interface CoursesTabProps {
-    courses: CourseItem[]
-    setCourses: React.Dispatch<React.SetStateAction<CourseItem[]>>
-    users: UserItem[]
+    courses: CourseInterface[]
+    setCourses: React.Dispatch<React.SetStateAction<CourseInterface[]>>
+    users: UserInterface[]
 }
 
 export const CoursesTab: React.FC<CoursesTabProps> = ({ courses, setCourses, users }) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [editingCourse, setEditingCourse] = useState<CourseItem | null>(null)
+    const [editingCourse, setEditingCourse] = useState<CourseInterface | null>(null)
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null)
 
     const [title, setTitle] = useState('')
@@ -48,7 +48,7 @@ export const CoursesTab: React.FC<CoursesTabProps> = ({ courses, setCourses, use
         setIsModalOpen(true)
     }
 
-    const openEditModal = (course: CourseItem) => {
+    const openEditModal = (course: CourseInterface) => {
         setEditingCourse(course)
         setTitle(course.title)
         setCode(course.code)
@@ -81,7 +81,7 @@ export const CoursesTab: React.FC<CoursesTabProps> = ({ courses, setCourses, use
                 maxStudents
             } : c))
         } else {
-            const newCourse: CourseItem = {
+            const newCourse: CourseInterface = {
                 id: Math.random().toString(36).substring(2, 11),
                 title,
                 code,

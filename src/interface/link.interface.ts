@@ -1,4 +1,4 @@
-export interface EmergencyLinkItem {
+export interface EmergencyLinkInterface {
     id: string;
     teacherName: string;
     studentName: string;

@@ -1,8 +1,13 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap");
 
 :root {
-  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Plus Jakarta Sans",
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -36,15 +41,21 @@ body {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 .animate-slideInUp {
   animation: slideInUp 0.4s ease-out forwards;
 }
-
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -62,4 +73,58 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 2px 4px !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.rbc-event.rbc-selected {
+  background-color: transparent !important;
+}
+
+.rbc-event-content {
+  font-size: inherit !important;
+  height: 100%;
+}
+
+.rbc-time-view,
+.rbc-time-header,
+.rbc-header,
+.rbc-day-bg,
+.rbc-time-content,
+.rbc-timeslot-group,
+.rbc-time-slot {
+  border-color: #f1f5f9 !important;
+}
+
+.rbc-timeslot-group {
+  min-height: 80px !important;
+}
+
+.rbc-header {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b !important;
+  padding: 12px 0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rbc-header.rbc-today {
+  color: #8568c0 !important;
+  background-color: #fcfaff;
+}
+
+.rbc-time-gutter .rbc-label {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  padding-right: 12px;
 }

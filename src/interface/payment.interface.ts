@@ -6,7 +6,7 @@ export interface StudentPaymentDetail {
     ratePerClass: number;
 }
 
-export interface TeacherPaymentItem {
+export interface TeacherPaymentInterface {
     id: string;
     teacherName: string;
     totalClasses: number;

@@ -1,19 +1,58 @@
 import React, { useState } from 'react';
 import { Plus, Search, ChevronLeft, ChevronRight, Video, X } from 'lucide-react';
-import { SessionItem, UserItem } from '../interface';
+import { SessionInterface, UserInterface } from '../interface';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { addWeeks, subWeeks, addMonths, subMonths,format, parse, startOfWeek, endOfWeek, getDay } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { languageConstant } from '../constants';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-interface CalendarTabProps {
-    sessions: SessionItem[]
-    setSessions: React.Dispatch<React.SetStateAction<SessionItem[]>>
-    users: UserItem[]
-}
+const CustomEvent = ({ event }: any) => {
+    const session = event.resource;
+    
+    const getBadgeStyles = (statusVal: string) => {
+        if (statusVal === 'Cancelada') return 'bg-red-50/70 border-red-100 text-red-700';
+        if (statusVal === 'Completada') return 'bg-emerald-50/70 border-emerald-100 text-emerald-700';
+        return 'bg-purple-50/70 border-purple-100 text-purple-700';
+    };
 
-const locales = {
-    'es': es,
+    const getTooltipStatusStyles = (statusVal: string) => {
+        if (statusVal === 'Cancelada') return 'bg-red-500/20 text-red-400';
+        if (statusVal === 'Completada') return 'bg-emerald-500/20 text-emerald-400';
+        return 'bg-purple-500/20 text-purple-400';
+    };
+
+    return (
+        <div className="relative group h-full w-full">
+            <div className={`p-2 rounded-2xl h-full flex flex-col justify-center shadow-xs border leading-tight ${getBadgeStyles(session.status)}`}>
+                <span className="font-bold truncate text-[11px]">{session.studentName}</span>
+                <span className="text-[9px] opacity-75 truncate">{session.startTime} - {session.endTime}</span>
+            </div>
+            
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 bg-slate-900 text-white text-xs rounded-2xl p-4 shadow-xl opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 z-50 flex flex-col gap-1.5 border border-slate-800">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-1.5 mb-1">
+                    <span className="font-bold text-slate-200">Detalles de Clase</span>
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${getTooltipStatusStyles(session.status)}`}>
+                        {session.status}
+                    </span>
+                </div>
+                <p className="text-slate-300"><strong className="text-slate-400">Estudiante:</strong> {session.studentName}</p>
+                <p className="text-slate-300"><strong className="text-slate-400">Profesor:</strong> {session.teacherName}</p>
+                <p className="text-slate-300"><strong className="text-slate-400">Horario:</strong> {session.startTime} - {session.endTime}</p>
+                {session.link && (
+                    <a href={session.link} target="_blank" rel="noreferrer" className="mt-1 text-[10px] text-purple-400 hover:text-purple-300 underline font-semibold flex items-center gap-1 pointer-events-auto">
+                        Ir a videollamada
+                    </a>
+                )}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-slate-900"></div>
+            </div>
+        </div>
+    );
+};
+
+interface CalendarTabProps {
+    sessions: SessionInterface[]
+    setSessions: React.Dispatch<React.SetStateAction<SessionInterface[]>>
+    users: UserInterface[]
 }
 
 const localizer = dateFnsLocalizer({
@@ -21,7 +60,7 @@ const localizer = dateFnsLocalizer({
     parse,
     startOfWeek,
     getDay,
-    locales,
+    locales: languageConstant,
 })
 
 export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions, users }) => {
@@ -85,7 +124,7 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
             dayIndex = 6
         }
 
-        const newSession: SessionItem = {
+        const newSession: SessionInterface = {
             id: Math.random().toString(36).substring(2, 11),
             studentName,
             teacherName: teacherId || 'Sin Profesor',
@@ -129,9 +168,9 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
         const start = startOfWeek(currentDate, { weekStartsOn: 1 })
         const end = endOfWeek(currentDate, { weekStartsOn: 1 })
         return `${format(start, 'dd', {
-            locale: es })} - ${format(end, "dd 'de' MMMM yyyy", { locale: es })}`;
+            locale: languageConstant.es })} - ${format(end, "dd 'de' MMMM yyyy", { locale: languageConstant.es })}`;
         } else {
-            return format(currentDate, "MMMM 'de' yyyy", { locale: es });
+            return format(currentDate, "MMMM 'de' yyyy", { locale: languageConstant.es });
         }
     };
 
@@ -206,6 +245,27 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
                         defaultView='week'
                         style={{ height: '100%' }}
                         toolbar={false}
+                        min={new Date(2026, 0, 1, 7, 0)}
+                        max={new Date(2026, 0, 1, 18, 0)}
+                        components={{
+                            event: CustomEvent
+                        }}
+                        eventPropGetter={(event) => {
+                            const status = event.resource.status;
+                            let customStyles = '';
+
+                            if (status === 'Cancelada') {
+                                customStyles = 'bg-red-50/80 text-red-700 border-red-200 hover:bg-red-100/80';
+                            } else if (status === 'Completada') {
+                                customStyles = 'bg-emerald-50/80 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80';
+                            } else {
+                                customStyles = 'bg-purple-50/80 text-[#8568C0] border-purple-200 hover:bg-purple-100/80';
+                            }
+
+                            return {
+                                className: `${customStyles} rounded-2xl border transition-all duration-200 shadow-xs overflow-hidden`
+                            };
+                        }}
                         messages={{
                             next: "Sig.",
                             previous: "Ant.",
@@ -214,7 +274,6 @@ export const CalendarTab: React.FC<CalendarTabProps> = ({ sessions, setSessions,
                             week: "Semana",
                             day: "Día",
                         }}
-
                     />
                 </div>
                 <div className="space-y-6">
